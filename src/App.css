@@ -1,38 +1,190 @@
-.App {
-  text-align: center;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  height: 100vh;
+  width: 100vw;
+  background-color: #1a1f38;
+  font-family: 'JetBrains Mono', monospace;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+#container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  gap: 4rem;
+}
+
+
+#circle {
+  position: relative;
+  width: 25.7rem;
+  height: 25.7rem;
+  z-index: 1;
+  transform: rotate(270deg);
+}
+
+svg circle {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: white;
+  stroke-width: 8;
+  stroke-linecap: round;
+  transform: translate(5px, 5px);
+}
+
+svg circle:nth-child(2) {
+  stroke-dasharray: 1255;
+  stroke-dashoffset: 1255;
+  transition: all 1s;
+  stroke: #D8AB00;
+  stroke-dashoffset: calc(1255 - (1255 *  90 / 100));
+}
+
+.display {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color:#D8AB00;
+}
+
+.display-set {
+  position: relative;
+  height: 25.7rem;
+  width: 25.7rem;
+  border-radius: 50%;
+}
+
+.display-text {
+  position: absolute;
+  top: 0;
+  left: 0; 
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 6rem;
+  align-items: center;
+  z-index: 3;
+}
+
+.dot {
+  position: absolute;
+  inset: 1px;
+  z-index: 3;
+  transition: all 1s;
+  transform: rotate(calc(3.6deg * 10));
+}
+
+.dot::before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #D8AB00;
+  box-shadow: 0 0 10px #D8AB00, 0 0 30px #D8AB00;
+}
+
+.controls{
+  display: flex;
+  gap: 1.5rem;
+  font-size: 1em;
+  /*Prevent text highlighting */
+  user-select: none;
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  }
+
+#start_stop, #reset {
+  display: none;
+}
+
+.controls label {
+  background-color: transparent;
+  border: none;
   color: white;
+  font-size: 1.3em;
+  cursor: pointer;
 }
 
-.App-link {
-  color: #61dafb;
+#timer-label {
+  color: white;
+  margin-bottom: 1rem;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#time-left {
+  font-size: 5em;
+  margin-bottom: 1rem;
 }
+
+
+#break-session {
+  display: flex;
+  gap: 4rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+#break, #session {
+  background-color: #333548b7;
+  width: 14rem;
+  text-align: center;
+  border-radius: 20px;
+  padding: 1rem;
+}
+
+#break-label, #session-label {
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.settings {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  /*Prevent text highlighting */
+  user-select: none;
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+}
+
+#break-length, #session-length {
+  font-size: 1.5em;
+  color: #D8AB00;
+}
+
+#session-increment, #session-decrement, #break-increment, #break-decrement {
+  display: none;
+}
+
+.settings label {
+  background-color: transparent;
+  border: none;
+  color: #D8AB00;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+
+
+  
