@@ -1,6 +1,6 @@
 # Free Code Camp Front End Framework Project: 25 + 5 Clock
 
-Link to deployed app: 
+Link to deployed app: https://fcc-pomodoroclock.herokuapp.com/
 
 
 Technologies:
