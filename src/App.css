@@ -112,6 +112,11 @@ svg circle {
   cursor: pointer;
 }
 
+.controls label:hover {
+  color: #D8AB00;
+  transform: scale(0.9);
+}
+
 #timer-label {
   color: white;
   margin-bottom: 1rem;
@@ -179,6 +184,7 @@ svg circle {
   cursor: pointer;
 }
 
-
-
-  
+.settings label:hover {
+  color: white;
+  transform: scale(0.9);
+}
