@@ -11,6 +11,16 @@ body {
   font-family: 'JetBrains Mono', monospace;
 }
 
+#title{
+  font-family: 'Chakra Petch', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: white;
+  margin-top: 2rem;
+  position: relative;
+  margin-bottom: 3rem;
+}
+
 #container {
   position: absolute;
   left: 0;
@@ -22,7 +32,6 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4rem;
 }
 
 
@@ -38,18 +47,18 @@ svg circle {
   width: 100%;
   height: 100%;
   fill: none;
-  stroke: white;
+  stroke: #333548b7;
   stroke-width: 8;
   stroke-linecap: round;
   transform: translate(5px, 5px);
 }
 
-svg circle:nth-child(2) {
+#stroke {
   stroke-dasharray: 1255;
   stroke-dashoffset: 1255;
   transition: all 1s;
   stroke: #D8AB00;
-  stroke-dashoffset: calc(1255 - (1255 *  90 / 100));
+  stroke-dashoffset: 0;
 }
 
 .display {
@@ -77,28 +86,7 @@ svg circle:nth-child(2) {
   flex-direction: column;
   margin-top: 6rem;
   align-items: center;
-  z-index: 3;
-}
-
-.dot {
-  position: absolute;
-  inset: 1px;
-  z-index: 3;
-  transition: all 1s;
-  transform: rotate(calc(3.6deg * 10));
-}
-
-.dot::before {
-  content: "";
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  top: -5px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #D8AB00;
-  box-shadow: 0 0 10px #D8AB00, 0 0 30px #D8AB00;
+  z-index: 1;
 }
 
 .controls{
@@ -127,6 +115,9 @@ svg circle:nth-child(2) {
 #timer-label {
   color: white;
   margin-bottom: 1rem;
+  font-family: 'Chakra Petch', sans-serif;
+  font-weight: 100;
+  letter-spacing: 0.1em;
 }
 
 #time-left {
@@ -148,12 +139,15 @@ svg circle:nth-child(2) {
   width: 14rem;
   text-align: center;
   border-radius: 20px;
-  padding: 1rem;
+  padding: 0.7rem;
+  margin-top: 3rem;
 }
 
 #break-label, #session-label {
   color: white;
   margin-bottom: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
 }
 
 .settings {
@@ -169,7 +163,7 @@ svg circle:nth-child(2) {
 }
 
 #break-length, #session-length {
-  font-size: 1.5em;
+  font-size: 1.4em;
   color: #D8AB00;
 }
 

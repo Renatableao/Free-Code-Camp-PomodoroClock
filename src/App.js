@@ -21,7 +21,8 @@ class App extends React.Component {
       label: "Session",
       timer: 1500,
       running: false,
-      intervalId: ""
+      intervalId: "",
+      strokeDash: 0
     }
     this.handleDecrement = this.handleDecrement.bind(this)
     this.handleIncrement = this.handleIncrement.bind(this)
@@ -29,6 +30,8 @@ class App extends React.Component {
     this.handlePlay = this.handlePlay.bind(this)
     this.handleTimer = this.handleTimer.bind(this)
     this.handleSound = this.handleSound.bind(this)
+    this.handleStroke = this.handleStroke.bind(this)
+    this.handleStrokeReset = this.handleStrokeReset.bind(this)
 
   }
 
@@ -42,18 +45,24 @@ class App extends React.Component {
         this.setState({
           breakLength: this.state.breakLength + 1
         }, () => {
-          // Update break display only
+          // Update only if break is displayed
           if(this.state.label === "Break") {
-            this.setState({timer: this.state.breakLength * 60})
+            this.handleStrokeReset();
+            this.setState({
+              timer: this.state.breakLength * 60, 
+              strokeDash: 0})
       }})}
       // Set session length incrementing value by one
       if(event.target.id === "session-increment") {
         this.setState({
-          sessionLength: this.state.sessionLength + 1,
-          // Update session display only
+          sessionLength: this.state.sessionLength + 1
+          // Update only if session is displayed
         }, () => {
           if(this.state.label === "Session") {
-            this.setState({timer: this.state.sessionLength * 60})
+            this.handleStrokeReset();
+            this.setState({
+              timer: this.state.sessionLength * 60,
+              strokeDash: 0})
       }})
     }
   }}}
@@ -68,19 +77,26 @@ class App extends React.Component {
         this.setState({
           breakLength: this.state.breakLength - 1
         }, () => {
-          // Update break display only
+          // Update only if break is displayed
           if(this.state.label === "Break") {
-          this.setState({timer: this.state.breakLength * 60})
+            this.handleStrokeReset();
+          this.setState({
+            timer: this.state.breakLength * 60,
+            strokeDash: 0
+          })
           }
       })}
       // Set session length decrementing value by one
       if(event.target.id === "session-decrement") {
         this.setState({
-          sessionLength: this.state.sessionLength - 1,
-          // Update session display only
+          sessionLength: this.state.sessionLength - 1
+          // Update only of session is displayed
         }, () => {
           if(this.state.label === "Session") {
-            this.setState({timer: this.state.sessionLength * 60})
+            this.handleStrokeReset();
+            this.setState({
+              timer: this.state.sessionLength * 60,
+              strokeDash: 0})
       }})
     }
   }}}
@@ -98,6 +114,21 @@ class App extends React.Component {
     }
   }
 
+  handleStroke() {
+    const stroke = document.getElementById('stroke');
+    //Stroke will fade according to break/session length
+    if(this.state.label === "Session") {
+      this.setState({
+        strokeDash: this.state.strokeDash + (21/this.state.sessionLength) //21 finish full circle in 60 seconds
+      }, () => {stroke.style.strokeDashoffset = this.state.strokeDash})
+    }
+    else {
+      this.setState({
+        strokeDash: this.state.strokeDash + (21/this.state.breakLength)
+      }, () => {stroke.style.strokeDashoffset = this.state.strokeDash})
+    }
+  }
+
   handlePlay() {
     this.setState({
       //When play/pause button is clicked: If clock is paused set to true, if it's running set to false
@@ -108,29 +139,35 @@ class App extends React.Component {
   handleTimer() {
     // If not reached 0, keep updating value by minus 1 every second
     if(this.state.timer > 0) {
-      //Set worning color if timer is less than 1 minute
+      //Set warning color if timer is less than 1 minute
       this.handleWarningColor()
       setTimeout(() => {
         //Only starts if clock is set to running "true"
         if(this.state.running) {
+          this.handleStroke();
           this.setState({
             timer: this.state.timer - 1
-            }, () => {this.handleTimer()})}},1000)
+            }, () => {this.handleTimer()})};
+          },1000)
     }
-    //If reached 0, start new session or break and then update value every second
+    //If reached 0, start new session/break and then update value every second
     if(this.state.timer === 0) {
       this.handleSound();
         setTimeout(() => {
           if(this.state.label === "Session") {
+            this.handleStrokeReset();
             this.setState({
               label: "Break",
-              timer:  this.state.breakLength * 60 //Set timer with break length defined on settings
-            }, () => {this.handleTimer()})
+              timer:  this.state.breakLength * 60,  //Set timer with break length defined on settings
+              strokeDash: 0
+             }, () => {this.handleTimer()})
           }
           else {
+            this.handleStrokeReset();
             this.setState({
               label: "Session",
-              timer:  this.state.sessionLength * 60 //Set timer with session length defined on settings
+              timer:  this.state.sessionLength * 60, //Set timer with session length defined on settings
+              strokeDash: 0
             }, () => {this.handleTimer()})
           }
         }, 1000)
@@ -138,13 +175,21 @@ class App extends React.Component {
   }
 
   handleWarningColor() {
+    //If timer is less than 1 minute, set clock to red
     if (this.state.timer < 60) {
-       document.getElementById("time-left").style.color = '#a50d0d'
+       document.getElementById("time-left").style.color = '#a50d0d';
+       document.getElementById('stroke').style.stroke = "#a50d0d"
     } 
     else {
-      document.getElementById("time-left").style.color = '#D8AB00'
-    }
+      document.getElementById("time-left").style.color = '#D8AB00';
+      document.getElementById('stroke').style.stroke = "#D8AB00"
+    } 
   }
+
+  handleStrokeReset() {
+    document.getElementById('stroke').style.strokeDashoffset = 0;
+  }
+
 
   handleReset() {
     this.setState({
@@ -152,15 +197,17 @@ class App extends React.Component {
       breakLength: 5,
       sessionLength: 25,
       timer: 1500,
-      running: false
-    }, () => {this.handleSound()}) // this is the code that actually works but it does not pass tests -- Stop sound when running is false (=reset)
-    //this.handleSound()  this code pass tests but it doesnt work without setting interval
-    document.getElementById("time-left").style.color = '#D8AB00'
+      running: false,
+      strokeDash: 0
+    }, () => {this.handleSound(); this.handleStrokeReset(); this.handleWarningColor()}) // this is the code that actually works but it does not pass tests -- Stop sound when running is false (=reset)
+    //this.handleSound()  this piece of code pass tests but it doesn't work without setting interval
+    document.getElementById("time-left").style.color = '#D8AB00' //reset timer color
   }  
 
   render() {
   return (
     <div id="container">
+      <h1 id="title">25 + 5 Clock</h1>
       <Display sessionLength={this.state.sessionLength} label={this.state.label} reset={this.handleReset} playpause={this.handlePlay} timer={this.state.timer}/>
       <BreakSession increment={this.handleIncrement} decrement={this.handleDecrement} sessionLength={this.state.sessionLength} breakLength={this.state.breakLength}/>
     </div>  
@@ -201,11 +248,10 @@ class Display extends React.Component {
   render() {
   return (
       <div className="display">
-        <div className="display-set">
-          <div className="dot"></div>
+        <div className="display-set"> 
             <svg id="circle">
               <circle cx="200" cy="200" r="200"></circle>
-              <circle id="10" cx="200" cy="200" r="200"></circle>
+              <circle id="stroke" cx="200" cy="200" r="200"></circle>
             </svg>
             <div className= "display-text">
               <h1 id="timer-label">{this.props.label}</h1>
